@@ -457,12 +457,13 @@ for tool in "${TOOLS[@]}"; do
                 races=$(grep -ce 'Found a data race' tmp.log)
                 cat tmp.log >> "$LOG_DIR/$logname" || >tmp.log ;;
               tsan-clang)
-#                races=$($MEMCHECK -q -f "%M" -o "$MEMLOG" "./$exname" $size 2>&1 | tee -a "$LOG_DIR/$logname" | grep -ce 'WARNING: ThreadSanitizer: data race') ;;
-                $TIMEOUTCMD $TIMEOUTMIN"m" $MEMCHECK -q -f "%M" -o "$MEMLOG" env TSAN_OPTIONS="ignore_noninstrumented_modules=1" "./$exname" $size &> tmp.log;
-                check_return_code $?;
-		echo "$testname return $testreturn"
-                races=$(grep -ce 'WARNING: ThreadSanitizer: data race' tmp.log) 
-                cat tmp.log >> "$LOG_DIR/$logname" || >tmp.log ;;
+# #                races=$($MEMCHECK -q -f "%M" -o "$MEMLOG" "./$exname" $size 2>&1 | tee -a "$LOG_DIR/$logname" | grep -ce 'WARNING: ThreadSanitizer: data race') ;;
+#                 $TIMEOUTCMD $TIMEOUTMIN"m" $MEMCHECK -q -f "%M" -o "$MEMLOG" env TSAN_OPTIONS="ignore_noninstrumented_modules=1" "./$exname" $size &> tmp.log;
+#                 check_return_code $?;
+# 		echo "$testname return $testreturn"
+#                 races=$(grep -ce 'WARNING: ThreadSanitizer: data race' tmp.log) 
+#                 cat tmp.log >> "$LOG_DIR/$logname" || >tmp.log ;;
+              ;;
               tsan-gcc)
 #                races=$($MEMCHECK -q -f "%M" -o "$MEMLOG" "./$exname" $size 2>&1 | tee -a "$LOG_DIR/$logname" | grep -ce 'WARNING: ThreadSanitizer: data race') ;;
                 $TIMEOUTCMD $TIMEOUTMIN"m" $MEMCHECK -q -f "%M" -o "$MEMLOG" "./$exname" $size &> tmp.log;
@@ -628,11 +629,12 @@ for tool in "${TOOLS[@]}"; do
                 races=$(grep -ce 'Possible data race' tmp.log) 
                 cat tmp.log >> "$LOG_DIR/$logname" || >tmp.log ;;
               archer)
-                $TIMEOUTCMD $TIMEOUTMIN"m" $MEMCHECK -q -f "%M" -o "$MEMLOG" "./$exname" $size &> tmp.log;
-                check_return_code $?;
-		echo "$testname return $testreturn"
-                races=$(grep -ce 'WARNING: ThreadSanitizer: data race' tmp.log) 
-                cat tmp.log >> "$LOG_DIR/$logname" || >tmp.log ;;
+    #             $TIMEOUTCMD $TIMEOUTMIN"m" $MEMCHECK -q -f "%M" -o "$MEMLOG" "./$exname" $size &> tmp.log;
+    #             check_return_code $?;
+		# echo "$testname return $testreturn"
+    #             races=$(grep -ce 'WARNING: ThreadSanitizer: data race' tmp.log) 
+    #             cat tmp.log >> "$LOG_DIR/$logname" || >tmp.log ;;
+                  ;;
               coderrect)
                 $TIMEOUTCMD $TIMEOUTMIN"m" $MEMCHECK -q -f "%M" -o "$MEMLOG" coderrect -XenableProgress=false -t gfortran -fopenmp $additional_compile_flags $test -o $exname -lm &> tmp.log;
                 check_return_code $?;

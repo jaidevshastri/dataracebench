@@ -139,7 +139,7 @@ if [[ "$OPTION" == "--run" ]]; then
     rm -rf $CLANG_EXEC_VALGRIND
     mkdir -p $CLANG_EXEC_VALGRIND
     rm -rf $CLANG_RESULT
-    echo "PROGRAM\tBIN_SIZE(B)\tTEXT_SIZE(B)\tBSS_SIZE(B)\tHEAP_SIZE(B)\tSTACK_SIZE(B)\tEXEC_TIME(uS)"
+    echo -e "PROGRAM\tBIN_SIZE(B)\tTEXT_SIZE(B)\tBSS_SIZE(B)\tHEAP_SIZE(B)\tSTACK_SIZE(B)\tEXEC_TIME(uS)" >> $CLANG_RESULT
     if [[ "$LANGUAGE" == "c" || "$LANGUAGE" == "C" ]]; then
     	for test in $TESTS; do
             echo "------------------------------------------"
