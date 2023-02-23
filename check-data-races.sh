@@ -54,11 +54,12 @@ FPOLYFLAG="-Imicro-benchmarks-fortran micro-benchmarks-fortran/utilities/fpolybe
 LANGUAGE="default"
 
 CC="clang"
-VALGRIND="valgrind --tool=massif --stacks=yes"
+VALGRIND="valgrind --trace-children=yes --tool=massif --stacks=yes"
 CLANG_EXEC="results/exec-clang"
 CLANG_EXEC_VALGRIND="$CLANG_EXEC/valgrind-$(date +"%Y-%m-%d")"
 CLANG_RESULT="results/clang-result-$(date +"%Y-%m-%d")"
-CLANG_EXEC_COUNT=5
+CLANG_EXEC_COUNT=1
+DB_SIZE=32
 
 help () {
     echo
@@ -139,7 +140,7 @@ if [[ "$OPTION" == "--run" ]]; then
     rm -rf $CLANG_EXEC_VALGRIND
     mkdir -p $CLANG_EXEC_VALGRIND
     rm -rf $CLANG_RESULT
-    echo -e "PROGRAM\tBIN_SIZE(B)\tTEXT_SIZE(B)\tBSS_SIZE(B)\tHEAP_SIZE(B)\tSTACK_SIZE(B)\tEXEC_TIME(uS)" >> $CLANG_RESULT
+    echo -e "PROGRAM\tBIN_SIZE(B)\tTEXT_SIZE(B)\tBSS_SIZE(B)\tHEAP_SIZE(B)\tSTACK_SIZE(B)\tEXEC_TIME(S)" >> $CLANG_RESULT
     if [[ "$LANGUAGE" == "c" || "$LANGUAGE" == "C" ]]; then
     	for test in $TESTS; do
             echo "------------------------------------------"
@@ -148,13 +149,13 @@ if [[ "$OPTION" == "--run" ]]; then
             for ((n=0;n<$CLANG_EXEC_COUNT;n++))
             do
                 START_TIME=$(date +%s.%6N)
-                ./$CLANG_EXEC/$(basename $test .c) >> /dev/null
+                ./$CLANG_EXEC/$(basename $test .c) $DB_SIZE >> /dev/null
                 END_TIME=$(date +%s.%6N)
                 ELAPTIME=$(echo "scale=6; $END_TIME - $START_TIME" | bc)
                 EXEC_TIME=$(echo "scale=6; $EXEC_TIME + $ELAPTIME" | bc)
             done
             EXEC_TIME=$(echo "scale=6; $EXEC_TIME / $CLANG_EXEC_COUNT" | bc)
-            $VALGRIND --massif-out-file=$CLANG_EXEC_VALGRIND/$(basename $test .c).log ./$CLANG_EXEC/$(basename $test .c)
+            $VALGRIND --massif-out-file=$CLANG_EXEC_VALGRIND/$(basename $test .c).log ./$CLANG_EXEC/$(basename $test .c) $DB_SIZE
             BIN_SIZE=$(ls -al $CLANG_EXEC/$(basename $test .c) | awk '{print $5;}')
             TEXT_SIZE=$(objdump -h $CLANG_EXEC/$(basename $test .c) | grep -w .text | awk '{print "0x" $3;}' | xargs printf "%d")
             BSS_SIZE=$(objdump -h $CLANG_EXEC/$(basename $test .c) | grep -w .bss | awk '{print "0x" $3;}' | xargs printf "%d")

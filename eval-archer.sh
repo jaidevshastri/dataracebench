@@ -1,7 +1,7 @@
 OUTPUT_DIR="results"
 EXEC_DIR="$OUTPUT_DIR/exec-archer"
 PROGS="$EXEC_DIR/*"
-VALGRIND="valgrind --tool=massif --stacks=yes"
+VALGRIND="valgrind --trace-children=yes --tool=massif --stacks=yes"
 ARCHER_EXEC_VALGRIND="$OUTPUT_DIR/archer-valgrind-$(date +"%Y-%m-%d")"
 ARCHER_RESULT="$OUTPUT_DIR/archer-result-$(date +"%Y-%m-%d")"
 DS_SIZE=32
@@ -11,7 +11,7 @@ rm -rf $ARCHER_EXEC_VALGRIND
 rm -rf $ARCHER_RESULT
 mkdir $ARCHER_EXEC_VALGRIND
 
-echo "PROGRAM\tBIN_SIZE(B)\tTEXT_SIZE(B)\tBSS_SIZE(B)\tHEAP_SIZE(B)\tSTACK_SIZE(B)\tEXEC_TIME(uS)" >> $ARCHER_RESULT
+echo "PROGRAM\tBIN_SIZE(B)\tTEXT_SIZE(B)\tBSS_SIZE(B)\tHEAP_SIZE(B)\tSTACK_SIZE(B)\tEXEC_TIME(S)" >> $ARCHER_RESULT
 for PROG in $PROGS
 do
     EXEC_TIME=0

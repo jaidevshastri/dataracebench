@@ -1,7 +1,7 @@
 OUTPUT_DIR="results"
 EXEC_DIR="$OUTPUT_DIR/exec-tsan"
 PROGS="$EXEC_DIR/*"
-VALGRIND="valgrind --tool=massif --stacks=yes"
+VALGRIND="valgrind --trace-children=yes --tool=massif --stacks=yes"
 TSAN_EXEC_VALGRIND="$OUTPUT_DIR/tsan-valgrind-$(date +"%Y-%m-%d")"
 TSAN_RESULT="$OUTPUT_DIR/tsan-result-$(date +"%Y-%m-%d")"
 DS_SIZE=32
@@ -11,7 +11,7 @@ rm -rf $TSAN_EXEC_VALGRIND
 rm -rf $TSAN_RESULT
 mkdir $TSAN_EXEC_VALGRIND
 
-echo "PROGRAM\tBIN_SIZE(B)\tTEXT_SIZE(B)\tBSS_SIZE(B)\tHEAP_SIZE(B)\tSTACK_SIZE(B)\tEXEC_TIME(uS)" >> $TSAN_RESULT
+echo "PROGRAM\tBIN_SIZE(B)\tTEXT_SIZE(B)\tBSS_SIZE(B)\tHEAP_SIZE(B)\tSTACK_SIZE(B)\tEXEC_TIME(S)" >> $TSAN_RESULT
 for PROG in $PROGS
 do
     EXEC_TIME=0
